@@ -1,26 +1,33 @@
 
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import Row from './row/Row';
 import { MONTHS } from './const';
 
 interface IProps {
     extraColumns: string[]
+    handleSelect: any
 }
 
 function Calendar(props: IProps) {
 
     const [month, setMonth] = useState(3);
-    const [selected, setSelected] = useState(-1);
+    const [day, setDay] = useState(-1);
 
-    const handleSelect = useCallback((event: any) => {
+    const handleSelectDay = useCallback((event: any) => {
         const {value} = event.target;
-        setSelected(+value);
-    }, [selected]);
+        setDay(+value);
+    }, [day]);
 
     const handleChangeMonth = useCallback((event: any) => {
-        setSelected(-1);
+        setDay(-1);
         setMonth(+event.target.value);
     }, [month]);
+
+    useEffect(() => {
+        if (day >= 0 && month >= 0) {
+            props.handleSelect()();
+        }
+    }, [day, month]);
 
     return (
         <React.Fragment>
@@ -60,7 +67,7 @@ function Calendar(props: IProps) {
                                 {
                                     MONTHS[month].range.map((week: number[], index: number) => {
                                         return(
-                                            <Row week={index + 1} key={index} handleSelect = {handleSelect} selected={selected} range={week}></Row>
+                                            <Row week={index + 1} key={index} handleSelectDay = {handleSelectDay} day={day} range={week}></Row>
                                         );
                                     })
                                 }                                

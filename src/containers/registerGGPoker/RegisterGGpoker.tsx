@@ -4,6 +4,7 @@ import Gallery from '../../components/gallery/Gallery';
 
 function RegisterGGPoker() {
     const [images, setImages] = useState<any[]>([]);
+    const [data, setData] = useState<any>({});
 
     const cb = useCallback((event: any) => {
         const reader = new FileReader();
@@ -20,12 +21,16 @@ function RegisterGGPoker() {
         setImages(newImages);
     }, [images]);
 
+    const handleSelect = useCallback(() => {
+        console.log("Llamar al api");
+    }, [data]);
+
     return (
         <div className="card o-hidden border-0 shadow-lg my-5">
         <div className="card-body p-0">
             <div className="row">
                 <div className="col-lg-7 d-none d-lg-block">
-                    <Calendar extraColumns={["FBuffet"]} />
+                    <Calendar extraColumns={["FBuffet"]} handleSelect = {() => handleSelect} />
 
                 </div>
                 <div className="col-lg-5">
