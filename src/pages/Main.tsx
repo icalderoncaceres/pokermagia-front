@@ -3,12 +3,12 @@ import Sidebar from '../components/sidebar/Sidebar';
 import Footer from '../components/footer/Footer';
 import Navbar from '../components/navbar/Navbar';
 import Modal from '../components/modal/Modal';
-import { Routes, Route } from "react-router-dom";
 import MainRouter from '../routes/Main';
 
 function Main() {
+
     return (
-        <div>
+        <React.Fragment>
             <div id="wrapper">
 
                 <Sidebar></Sidebar>
@@ -30,7 +30,7 @@ function Main() {
             </a>
 
             <Modal></Modal>
-        </div>
+        </React.Fragment>
     );
 }
 
