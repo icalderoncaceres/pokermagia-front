@@ -23,22 +23,8 @@ export const login = async (payload: ILoginUserRequest): Promise<ILoginUserRespo
         email: payload.email,
         password: payload.password
     }
-    return {
-        status: 422,
-        data: {
-            user: {
-                id: 1,
-                name: 'Ivan',
-                last_name: 'Calderon',
-                email: 'ivan@mail.com',
-                role: ROLES.PLAYER,
-                avatar: ''
 
-            },
-            token: 'zbdj-ckdk-cdkd-123',
-        }
-    }
-    // return await callApi(`${BASE_URL}/api/v1/users/login`, data, 'POST', 'login');
+    return await callApi(`${BASE_URL}/api/v1/users/login`, data, 'POST', 'login');
 }
 
 export const autoLogin = async (payload: IAutoLoginUserRequest): Promise<IAutoLoginUserResponse> => {

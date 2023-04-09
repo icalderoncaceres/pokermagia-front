@@ -52,7 +52,9 @@ export interface IGetUserRequest {
 }
 
 export interface IGetUserResponse {
-    id: number
+    status: number
+    user? : IUser
+    errors?: string[]
 }
 
 export interface ICreateUserRequest {
