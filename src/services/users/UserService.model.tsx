@@ -94,6 +94,8 @@ export interface IAutoLoginUserRequest {
 
 export interface IAutoLoginUserResponse {
     status: number
-    user?: IUser
-    errors?: string[]
+    data: {
+        user?: IUser
+        errors?: string[]
+    }
 }

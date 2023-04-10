@@ -1,5 +1,5 @@
 
-import {useState, useCallback} from 'react';
+import { useState } from 'react';
 import { login } from '../services/users/UserService';
 
 function Login() {
@@ -24,13 +24,13 @@ function Login() {
         }
     }
 
-    const handleChangeEmail = useCallback((event: any) => {
+    const handleChangeEmail = (event: any) => {
         setEmail(event.target.value);
-    }, [email]);
+    };
 
-    const handleChangePassword = useCallback((event: any) => {
+    const handleChangePassword = (event: any) => {
         setPassword(event.target.value);
-    }, [password]);
+    }
 
     let alert: any;
     if (failed) {
