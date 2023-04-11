@@ -1,12 +1,29 @@
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Calendar from '../../components/calendar/Calendar';
 import Gallery from '../../components/gallery/Gallery';
+import { getList, save } from '../../services/registers/RegisterService';
+import userUser from '../../hooks/useUser'; 
 
 function RegisterPartyPoker() {
 
+    interface IResult {
+        day: number
+        month: number
+        bank: number
+        hands: number
+        points: number
+    }
+
+    const initialState = {
+        bank: 0,
+        hands: 0,
+        points: 0
+    }
     const [images, setImages] = useState<any[]>([]);
-    const [data, setData] = useState<{bank: number | string}>({bank: ''});
+    const [data, setData] = useState<any>(initialState);
+    const [list, setList] = useState<IResult[]>([]);
+    const [failed, setFailed] = useState<boolean>(false);
 
     const cb = useCallback((event: any) => {
         const reader = new FileReader();
@@ -23,14 +40,60 @@ function RegisterPartyPoker() {
         setImages(newImages);
     }, [images]);
 
-    const handleSelect = useCallback(() => {
-        console.log('Aqui debe de llamar al api');
-        setData({bank: 100});
-    }, [data]);
+    const handleSelect = useCallback((day: number, month: number) => {
+        console.log('day::', day, '  month::', month, ' list:', list);
+        const obj = list.find((reg: any) => reg.day == day && reg.month == month);
+        if (obj) {
+            setData({bank: obj.bank, hands: obj.hands, points: obj.points });
+        } else {
+            setData({bank: 0, hands: 0, points: 0});
+        }
+        setFailed(false);
+    }, []);
 
-    const handleChangeValue = (value: string) => {
-        console.log('Valor del input:', value);
-        setData({bank: +value});
+    const handleChangeValue = (e: any) => {
+        setData({
+            ...data,
+            [e.target.id]: e.target.value
+        });
+    }
+
+    const onSave = (e: any) => {
+        e.preventDefault();
+        if (data.bank === 0 || data.hands === 0 || data.points === 0 || images.length === 0) {
+            setFailed(true);
+            return;
+        }
+        (async () => {
+            try {                
+                const response = await save({
+                    data
+                });
+
+            } catch (error) {
+                setFailed(true);
+            }
+        })();
+    }
+
+    const user = userUser();
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const result = await getList({userId: user.id, room: 'partypoker'});
+                if (result.list) {
+                    setList(result.list);
+                }
+            } catch (error) {
+                setList([]);
+            }
+        })();
+    }, []);
+
+    let alert: any;
+    if (failed) {
+        alert = <div className="alert alert-danger text-center" role="alert">No es posible guardar sin la información completa, recuerde colocar al menos una imágen</div>
     }
 
     return (
@@ -50,27 +113,28 @@ function RegisterPartyPoker() {
                             <div className="form-group row">
                                 <div className="col-sm-6 mb-3 mb-sm-0">
                                     <input type="number" className="form-control form-control-user"
-                                        id="bank" placeholder="Bank Party" value={data.bank} onChange={e => handleChangeValue(e.target.value)} />
+                                        id="bank" placeholder="Bank Party" value={data.bank} onChange={e => handleChangeValue(e)} />
                                 </div>
                                 <div className="col-sm-6">
-                                    <input type="text" className="form-control form-control-user"
-                                        id="hands" placeholder="Número de Manos" />
+                                    <input type="number" className="form-control form-control-user"
+                                        id="hands" placeholder="Número de Manos" value={data.hands} onChange={e => handleChangeValue(e)} />
                                 </div>
                             </div>
                             <div className="form-group row">
                                 <div className="col-sm-6 mb-3 mb-sm-0">
-                                    <input type="text" className="form-control form-control-user"
-                                        id="points" placeholder="Puntos" />
+                                    <input type="number" className="form-control form-control-user"
+                                        id="points" placeholder="Puntos" value={data.points} onChange={e => handleChangeValue(e)} />
                                 </div>
                             </div>                                            
                             <hr/>   
-                            <a href="login.html" className="btn btn-primary btn-user btn-block">
+                            <a href="login.html" className="btn btn-primary btn-user btn-block" onClick = {e => onSave(e)}>
                                 Guardar
                             </a>
                         </form>
                         <hr />
                         <Gallery images={images} cb={() => cb} handleDelete={() => handleDelete}></Gallery>
                     </div>
+                    {alert}
                 </div>
             </div>
         </div>

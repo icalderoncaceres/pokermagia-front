@@ -12,21 +12,20 @@ function Calendar(props: IProps) {
 
     const [month, setMonth] = useState(3);
     const [day, setDay] = useState(-1);
-
+    
     const handleSelectDay = useCallback((event: any) => {
         const {value} = event.target;
         setDay(+value);
-    }, [day]);
-
+    }, []);
+    
     const handleChangeMonth = useCallback((event: any) => {
         setDay(-1);
         setMonth(+event.target.value);
-    }, [month]);
-
+    }, []);
+    
     useEffect(() => {
-        if (day >= 0 && month >= 0) {
-            props.handleSelect()();
-        }
+        const {handleSelect} = props;
+        handleSelect()(day, month);
     }, [day, month]);
 
     return (

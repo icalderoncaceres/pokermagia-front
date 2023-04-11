@@ -1,5 +1,5 @@
 
-import {useState, useCallback, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 
 import './App.css';
 import Main from './pages/Main';
@@ -7,7 +7,7 @@ import Login from './pages/Login';
 import UserContext from './contexts/UserContext';
 import { BrowserRouter } from 'react-router-dom';
 import { autoLogin } from './services/users/UserService';
-import { IAutoLoginUserResponse, IUser } from './services/users/UserService.model';
+import { IAutoLoginUserResponse } from './services/users/UserService.model';
 
 function App() {
     let page;
@@ -47,7 +47,7 @@ function App() {
                 console.log("Error"); 
             }
         })();
-    }, [userData]);
+    }, []);
 
     return (
         <BrowserRouter>

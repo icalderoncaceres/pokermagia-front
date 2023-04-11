@@ -14,9 +14,8 @@ import {
     IChangeStateUserResponse,
     IAutoLoginUserRequest,
     IAutoLoginUserResponse,
-    ROLES,
 } from './UserService.model';
-import {BASE_URL} from '../../helpers/config'
+import {BASE_URL} from '../../helpers/config';
 
 export const login = async (payload: ILoginUserRequest): Promise<ILoginUserResponse> => {
     const data = {
