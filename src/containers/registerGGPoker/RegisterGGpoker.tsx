@@ -22,8 +22,8 @@ function RegisterGGPoker() {
     }, [images]);
 
     const handleSelect = useCallback(() => {
-        console.log("Llamar al api");
-    }, [data]);
+        setData({bank: 100});
+    },[]);
 
     return (
         <div className="card o-hidden border-0 shadow-lg my-5">

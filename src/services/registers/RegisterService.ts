@@ -10,11 +10,17 @@ import {
 import {BASE_URL} from '../../helpers/config';
 
 export const get = async (payload: IGetRegisterRequest): Promise<IGetRegisterResponse> => {
-    return {id: 1};
+    const data = {
+        day: payload.day,
+        month: payload.month,
+        userId: payload.userId,
+        room: payload.room
+    }
+    return await callApi(`${BASE_URL}/api/v1/registers/get`, data, 'POST', 'getList');
+
 }
 
 export const getList = async (payload: IGetListRegisterRequest): Promise<IGetListRegisterResponse> => {
-
     const data = {
         userId: payload.userId,
         room: payload.room

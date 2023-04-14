@@ -69,7 +69,12 @@ function Calendar(props: IProps) {
                                             <Row week={index + 1} key={index} handleSelectDay = {handleSelectDay} day={day} range={week}></Row>
                                         );
                                     })
-                                }                                
+                                }
+                                <tr>
+                                    <td colSpan={8}><div className="alert alert-info" role="alert">UTILICE ESTE BOTON PARA GUARDAR LOS REGISTROS SEMANALES</div></td>
+                                    <td><button className="btn btn-primary">Guardar</button></td>
+
+                                </tr>                                
                         </tbody>
                     </table>
                 </div>

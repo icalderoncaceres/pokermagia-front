@@ -9,11 +9,16 @@ interface IRegisterData {
 }
 
 export interface IGetRegisterRequest {
-
+    userId: number
+    room: string
+    day: number
+    month: number
 }
 
 export interface IGetRegisterResponse {
-    id: number
+    status: number
+    data?: IRegisterData
+    errors? : string[]
 }
 
 export interface ISaveRegisterRequest {

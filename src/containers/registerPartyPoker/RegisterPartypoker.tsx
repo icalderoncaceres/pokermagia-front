@@ -1,19 +1,11 @@
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import Calendar from '../../components/calendar/Calendar';
 import Gallery from '../../components/gallery/Gallery';
-import { getList, save } from '../../services/registers/RegisterService';
+import { get, save } from '../../services/registers/RegisterService';
 import userUser from '../../hooks/useUser'; 
 
 function RegisterPartyPoker() {
-
-    interface IResult {
-        day: number
-        month: number
-        bank: number
-        hands: number
-        points: number
-    }
 
     const initialState = {
         bank: 0,
@@ -22,7 +14,7 @@ function RegisterPartyPoker() {
     }
     const [images, setImages] = useState<any[]>([]);
     const [data, setData] = useState<any>(initialState);
-    const [list, setList] = useState<IResult[]>([]);
+    const [list, setList] = useState<any[]>([]);
     const [failed, setFailed] = useState<boolean>(false);
 
     const cb = useCallback((event: any) => {
@@ -40,9 +32,26 @@ function RegisterPartyPoker() {
         setImages(newImages);
     }, [images]);
 
+    const user = userUser();
+
+    const loadDataFromServer = async (day: number, month: number) => {
+        let response = await get({userId: user.id, room: 'partypoker', day, month});
+        if (response.data) {
+            setData({ bank: response.data.bank, hands: response.data.hands, points: response.data.points});
+        }
+    }
+    
     const handleSelect = useCallback((day: number, month: number) => {
         console.log('day::', day, '  month::', month, ' list:', list);
+        if (day === -1 || month === -1) {
+            setData({bank: 0, hands: 0, points: 0});
+            return;
+        }
+
+        loadDataFromServer(day, month);
+
         const obj = list.find((reg: any) => reg.day == day && reg.month == month);
+        console.log('obj--', obj);
         if (obj) {
             setData({bank: obj.bank, hands: obj.hands, points: obj.points });
         } else {
@@ -66,7 +75,7 @@ function RegisterPartyPoker() {
         }
         (async () => {
             try {                
-                const response = await save({
+                await save({
                     data
                 });
 
@@ -76,20 +85,19 @@ function RegisterPartyPoker() {
         })();
     }
 
-    const user = userUser();
 
+    /*
     useEffect(() => {
-        (async () => {
-            try {
-                const result = await getList({userId: user.id, room: 'partypoker'});
-                if (result.list) {
-                    setList(result.list);
-                }
-            } catch (error) {
-                setList([]);
+        const loadDataFromServer = async () => {
+            let response = await getList({userId: user.id, room: 'partypoker'});
+            if (response.list) {
+                console.log(response.list);
+                setList(response.list);
             }
-        })();
+        }
+        loadDataFromServer();   
     }, []);
+    */
 
     let alert: any;
     if (failed) {

@@ -1,10 +1,16 @@
 
+interface IProps {
+    week: number
+    range: number[]
+    day: number
+    handleSelectDay: any
+}
 
-function Row(props: {week: number, range: number[], day: number, handleSelectDay: any }) {
+function Row(props: IProps) {
     
     return (
         <tr>
-            <td>{props.week}</td>
+            <th scope="row">{props.week}</th>
             {
                 props.range.map((n: number, index: number) => {
                     if (n === props.day) {
@@ -13,7 +19,7 @@ function Row(props: {week: number, range: number[], day: number, handleSelectDay
                     return (<td key={`${n}_${index}`}><button onClick={props.handleSelectDay} value={n} className="btn btn-default"> {n > 0 ? n : ''}</button></td>)
                 })
             }
-            <td><input style={{width: "60px"}}></input></td>
+            <td><input  type="number" style={{width: "60px"}}></input></td>
         </tr>
     );
 }
