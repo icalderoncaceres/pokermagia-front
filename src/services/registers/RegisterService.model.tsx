@@ -5,7 +5,7 @@ interface IRegisterData {
     month: number
     bank: number
     hands: number
-    points: number
+    comodin: number
 }
 
 export interface IGetRegisterRequest {
@@ -22,11 +22,17 @@ export interface IGetRegisterResponse {
 }
 
 export interface ISaveRegisterRequest {
-    data: IRegisterData
+    userId: number
+    room: string
+    data: IRegisterData,
+    images?: {id: string, b64: string}[]
 }
 
 export interface ISaveRegisterResponse {
     status: number
+    bank: number
+    hands: number
+    comodin: number
     errors?: string[]
 }
 
@@ -41,3 +47,14 @@ export interface IGetListRegisterResponse {
     errors? : string[]
 }
 
+export interface IGetMonthlyRequest {
+    userId: number
+    month: number
+    room: string
+}
+
+export interface IGetMonthlyResponse {
+    status: number
+    list?: any[]
+    errors?: string[]
+}
