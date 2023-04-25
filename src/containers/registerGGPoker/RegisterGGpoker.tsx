@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import Calendar from '../../components/calendar/Calendar';
 import Gallery from '../../components/gallery/Gallery';
 import { get, save, getMonthly } from '../../services/registers/RegisterService';
-import userUser from '../../hooks/useUser'; 
+import userUser from '../../hooks/useUser';
 
 function RegisterGGPoker() {
 
@@ -23,24 +23,24 @@ function RegisterGGPoker() {
     const cb = useCallback((event: any) => {
         const reader = new FileReader();
         reader.addEventListener('load', (ev) => {
-          if (ev.target && ev.target.result) {
-            setImages([...images, {id: new Date().getTime(), b64: ev.target.result}]);
-          }
+            if (ev.target && ev.target.result) {
+                setImages([...images, { id: new Date().getTime(), b64: ev.target.result }]);
+            }
         });
         reader.readAsDataURL(event.target.files[0]);
-    }, [images]); 
+    }, [images]);
 
     const handleDelete = useCallback((event: any) => {
-        const newImages = images.filter((img: {id: string, b64: string}) => img.id != event.target.id);
+        const newImages = images.filter((img: { id: string, b64: string }) => img.id != event.target.id);
         setImages(newImages);
     }, [images]);
- 
+
     const user = userUser();
 
     const loadDataFromServer = async (day: number, month: number) => {
-        let response = await get({userId: user.id, room: 'ggpoker', day, month});
+        let response = await get({ userId: user.id, room: 'ggpoker', day, month });
         if (response.data) {
-            setData({ bank: response.data.bank, hands: response.data.hands, comodin: response.data.comodin, day, month});
+            setData({ bank: response.data.bank, hands: response.data.hands, comodin: response.data.comodin, day, month });
             const newListElement = {
                 day,
                 month,
@@ -51,11 +51,11 @@ function RegisterGGPoker() {
             list = [...list, newListElement];
         }
     }
-    
+
     const handleSelect = useCallback((day: number, month: number) => {
         console.log('day::', day, '  month::', month, ' list:', list);
         if (day === -1 || month === -1) {
-            setData({bank: 0, hands: 0, comodin: 0});
+            setData({ bank: 0, hands: 0, comodin: 0 });
             return;
         }
 
@@ -87,7 +87,7 @@ function RegisterGGPoker() {
             return;
         }
         (async () => {
-            try {                
+            try {
                 const response = await save({
                     data,
                     images,
@@ -100,7 +100,7 @@ function RegisterGGPoker() {
                     let obj = list.find((reg: any) => reg.day == data.day && reg.month == data.month);
                     if (obj) {
                         console.log('Si lo encontro');
-                        obj = {...data};
+                        obj = { ...data };
                     } else {
                         console.log('No lo encontró');
                         const newElement = {
@@ -134,47 +134,47 @@ function RegisterGGPoker() {
 
     return (
         <div className="card o-hidden border-0 shadow-lg my-5">
-        <div className="card-body p-0">
-            <div className="row">
-                <div className="col-lg-7 d-none d-lg-block">
-                    <Calendar extraColumns={["FBuffet"]} handleSelect = {() => handleSelect} />
-                </div>
-                <div className="col-lg-5">
-                    <div className="p-5">
-                        <div className="text-center">
-                            <h1 className="h4 text-gray-900 mb-4">Registro diario</h1>
-                        </div>
-                        <hr/>
-                        <form className="user">
-                            <div className="form-group row">
-                                <div className="col-sm-6 mb-3 mb-sm-0">
-                                    <input type="number" className="form-control form-control-user"
-                                        id="bank" placeholder="Bank GG" value={data.bank} onChange={e => handleChangeValue(e)} />
-                                </div>
-                                <div className="col-sm-6">
-                                    <input type="number" className="form-control form-control-user"
-                                        id="hands" placeholder="Número de Manos" value={data.hands} onChange={e => handleChangeValue(e)} />
-                                </div>
-                            </div>
-                            <div className="form-group row">
-                                <div className="col-sm-6 mb-3 mb-sm-0">
-                                    <input type="number" className="form-control form-control-user"
-                                        id="comodin" placeholder="$C" value={data.comodin} onChange={e => handleChangeValue(e)} />
-                                </div>
-                            </div>                                            
-                            <hr/>   
-                            <a href="login.html" className="btn btn-primary btn-user btn-block" onClick = {e => onSave(e)}>
-                                Guardar
-                            </a>
-                        </form>
-                        <hr />
-                        <Gallery images={images} cb={() => cb} handleDelete={() => handleDelete}></Gallery>
+            <div className="card-body p-0">
+                <div className="row">
+                    <div className="col-lg-7 d-none d-lg-block">
+                        <Calendar extraColumns={["FBuffet"]} handleSelect={() => handleSelect} />
                     </div>
-                    {alert}
+                    <div className="col-lg-5">
+                        <div className="p-5">
+                            <div className="text-center">
+                                <h1 className="h4 text-gray-900 mb-4">Registro diario</h1>
+                            </div>
+                            <hr />
+                            <form className="user">
+                                <div className="form-group row">
+                                    <div className="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="number" className="form-control form-control-user"
+                                            id="bank" placeholder="Bank GG" value={data.bank} onChange={e => handleChangeValue(e)} />
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <input type="number" className="form-control form-control-user"
+                                            id="hands" placeholder="Número de Manos" value={data.hands} onChange={e => handleChangeValue(e)} />
+                                    </div>
+                                </div>
+                                <div className="form-group row">
+                                    <div className="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="number" className="form-control form-control-user"
+                                            id="comodin" placeholder="$C" value={data.comodin} onChange={e => handleChangeValue(e)} />
+                                    </div>
+                                </div>
+                                <hr />
+                                <a href="login.html" className="btn btn-primary btn-user btn-block" onClick={e => onSave(e)}>
+                                    Guardar
+                                </a>
+                            </form>
+                            <hr />
+                            <Gallery images={images} cb={() => cb} handleDelete={() => handleDelete}></Gallery>
+                        </div>
+                        {alert}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     );
 }
 

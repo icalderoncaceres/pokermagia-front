@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { NavLink } from "react-router-dom";
 
 function Sidebar() {
@@ -63,9 +63,9 @@ function Sidebar() {
         </div>
 
         <li className="nav-item">
-            <a className="nav-link" href="players.html">
+            <NavLink className="nav-link" to={`player`}>
                 <i className="fas fa-fw fa-chart-area"></i>
-                <span>Jugadores</span></a>
+                <span>Jugadores</span></NavLink>
         </li>
 
         <li className="nav-item">

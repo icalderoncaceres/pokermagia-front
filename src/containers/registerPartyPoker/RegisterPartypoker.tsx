@@ -96,21 +96,10 @@ function RegisterPartyPoker() {
                 });
 
                 if (response.status === 200) {
-                    console.log('...', data, response);
                     let obj = list.find((reg: any) => reg.day == data.day && reg.month == data.month);
                     if (obj) {
                         console.log('Si lo encontro');
                         obj = {...data};
-                    } else {
-                        console.log('No lo encontró');
-                        const newElement = {
-                            day: data.day,
-                            month: data.month,
-                            bank: response.bank,
-                            hands: response.hands,
-                            comodin: response.comodin
-                        };
-                        list = [...list, newElement];
                     }
                     setSuccess(true);
                     setFailed(false);
