@@ -14,8 +14,12 @@ function RegisterGGPoker() {
         day: 0,
         month: 0
     }
+    const initialMonthlyData = [
+        {week: 1, comodin: 0},{week: 2, comodin: 0},{week: 3, comodin: 0},{week: 4, comodin: 0},{week: 5, comodin: 0},{week: 6, comodin: 0}
+    ];
     const [images, setImages] = useState<any[]>([]);
     const [data, setData] = useState<any>(initialState);
+    const [monthlyData, setMonthlyData] = useState<{week: number, comodin: number}[]>(initialMonthlyData);
     let list: any[] = [];
     const [failed, setFailed] = useState<boolean>(false);
     const [success, setSuccess] = useState<boolean>(false);
@@ -72,6 +76,12 @@ function RegisterGGPoker() {
         setSuccess(false);
     }, []);
 
+    const handleSave = useCallback(() => {
+        (async() => {
+            console.log('Llamar al servidor para guardar datos mensauales');
+        })();
+    }, []);
+
     const handleChangeValue = (e: any) => {
         setData({
             ...data,
@@ -79,6 +89,10 @@ function RegisterGGPoker() {
         });
     }
 
+    const handleChangeComodin = useCallback((week: number, value: number) => {
+        console.log(week, value);
+    }, []);
+    
     const onSave = (e: any) => {
         e.preventDefault();
         if (data.bank === 0 || data.hands === 0 || data.comodin === 0) {
@@ -137,7 +151,13 @@ function RegisterGGPoker() {
             <div className="card-body p-0">
                 <div className="row">
                     <div className="col-lg-7 d-none d-lg-block">
-                        <Calendar extraColumns={["FBuffet"]} handleSelect={() => handleSelect} />
+                        <Calendar 
+                            extraColumns={["FBuffet"]} 
+                            handleSelect={() => handleSelect} 
+                            monthlyData={monthlyData}
+                            handleChangeComodin={handleChangeComodin}
+                            handleSave={() => handleSave}
+                        />
                     </div>
                     <div className="col-lg-5">
                         <div className="p-5">

@@ -7,7 +7,9 @@ import {
     IGetListRegisterRequest,
     IGetListRegisterResponse,
     IGetMonthlyRequest,
-    IGetMonthlyResponse
+    IGetMonthlyResponse,
+    ISaveMonthlyRequest,
+    ISaveMonthlyResponse
 } from './RegisterService.model';
 import {BASE_URL} from '../../helpers/config';
 
@@ -50,6 +52,15 @@ export const getMonthly = async (payload: IGetMonthlyRequest): Promise<IGetMonth
         month: payload.month
     }
     return await callApi(`${BASE_URL}/api/v1/registers/getMonthly`, data, 'POST', 'getMonthly');
+}
+
+export const saveMonthly = async (payload: ISaveMonthlyRequest): Promise<ISaveMonthlyResponse> => {
+    const data = {
+        userId: payload.userId,
+        room: payload.room,
+        data: payload.data
+    }
+    return await callApi(`${BASE_URL}/api/v1/registers/saveMonthly`, data, 'POST', 'saveMonthly');
 }
 
 const callApi = async (url: string, data: any, method: string, action: string): Promise<any> => {

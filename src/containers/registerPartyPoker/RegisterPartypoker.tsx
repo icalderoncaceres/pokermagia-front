@@ -2,7 +2,7 @@
 import { useCallback, useState } from 'react';
 import Calendar from '../../components/calendar/Calendar';
 import Gallery from '../../components/gallery/Gallery';
-import { get, save, getMonthly } from '../../services/registers/RegisterService';
+import { get, save, getMonthly, saveMonthly } from '../../services/registers/RegisterService';
 import userUser from '../../hooks/useUser'; 
 
 function RegisterPartyPoker() {
@@ -14,11 +14,15 @@ function RegisterPartyPoker() {
         day: 0,
         month: 0
     }
+    const initialMonthlyData = [
+        {week: 1, comodin: 0},{week: 2, comodin: 0},{week: 3, comodin: 0},{week: 4, comodin: 0},{week: 5, comodin: 0},{week: 6, comodin: 0}
+    ];
     const [images, setImages] = useState<any[]>([]);
     const [data, setData] = useState<any>(initialState);
-    let list: any[] = [];
     const [failed, setFailed] = useState<boolean>(false);
     const [success, setSuccess] = useState<boolean>(false);
+    const [monthlyData, setMonthlyData] = useState<{week: number, comodin: number}[]>(initialMonthlyData);
+    let list: any[] = [];
 
     const cb = useCallback((event: any) => {
         const reader = new FileReader();
@@ -51,11 +55,22 @@ function RegisterPartyPoker() {
             list = [...list, newListElement];
         }
     }
+
+    const loadMonthlyDataFromServer = async (month: number) => {
+        let response = await getMonthly({userId: user.id, month, room: 'partypoker'});
+        if (response.status === 201) {
+            setMonthlyData(initialMonthlyData);
+        } else if (response.list) {
+            setMonthlyData(response.list);
+        }
+    }
     
     const handleSelect = useCallback((day: number, month: number) => {
-        console.log('day::', day, '  month::', month, ' list:', list);
         if (day === -1 || month === -1) {
             setData({bank: 0, hands: 0, comodin: 0});
+            if (month >= 0) {
+                loadMonthlyDataFromServer(month);
+            }
             return;
         }
 
@@ -72,12 +87,33 @@ function RegisterPartyPoker() {
         setSuccess(false);
     }, []);
 
+    const handleChangeComodin = useCallback((week: number, value: number) => {
+        const newMonthlyData = [...monthlyData];
+        monthlyData[week - 1].comodin = value;
+        setMonthlyData(newMonthlyData);
+    }, []);
+
     const handleChangeValue = (e: any) => {
         setData({
             ...data,
             [e.target.id]: e.target.value
         });
     }
+
+    const handleSave = useCallback(() => {
+        (async() => {
+            try {
+                const response = await saveMonthly({userId: user.id, room: 'partypoker', data: monthlyData});
+                if (response.status === 200) {
+                    setSuccess(true);
+                    setFailed(false);
+                }
+            } catch (error) {
+                setFailed(true);
+                setSuccess(false);             
+            }
+        })();
+    }, []);
 
     const onSave = (e: any) => {
         e.preventDefault();
@@ -94,18 +130,16 @@ function RegisterPartyPoker() {
                     userId: user.id,
                     room: 'partypoker'
                 });
-
                 if (response.status === 200) {
                     let obj = list.find((reg: any) => reg.day == data.day && reg.month == data.month);
                     if (obj) {
-                        console.log('Si lo encontro');
                         obj = {...data};
                     }
                     setSuccess(true);
                     setFailed(false);
                 }
-
             } catch (error) {
+                console.log('Cae en el error::', error);
                 setFailed(true);
                 setSuccess(false);
             }
@@ -126,7 +160,13 @@ function RegisterPartyPoker() {
         <div className="card-body p-0">
             <div className="row">
                 <div className="col-lg-7 d-none d-lg-block">
-                    <Calendar extraColumns={["$C"]} handleSelect = {() => handleSelect} />
+                    <Calendar 
+                        extraColumns={["$C"]} 
+                        handleSelect = {() => handleSelect} 
+                        monthlyData={monthlyData}
+                        handleChangeComodin={handleChangeComodin}
+                        handleSave={handleSave}
+                    />
                 </div>
                 <div className="col-lg-5">
                     <div className="p-5">

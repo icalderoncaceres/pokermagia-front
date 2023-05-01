@@ -58,3 +58,17 @@ export interface IGetMonthlyResponse {
     list?: any[]
     errors?: string[]
 }
+
+export interface ISaveMonthlyRequest {
+    userId: number
+    data: {
+        week: number,
+        comodin: number
+    }[]
+    room: string
+}
+
+export interface ISaveMonthlyResponse {
+    status: number
+    error?: string[]
+}

@@ -6,6 +6,9 @@ import { MONTHS } from './const';
 interface IProps {
     extraColumns: string[]
     handleSelect: any
+    handleChangeComodin: any
+    monthlyData: {week: number, comodin: number}[]
+    handleSave: any
 }
 
 function Calendar(props: IProps) {
@@ -21,6 +24,10 @@ function Calendar(props: IProps) {
     const handleChangeMonth = useCallback((event: any) => {
         setDay(-1);
         setMonth(+event.target.value);
+    }, []);
+
+    const handleChangeComodin = useCallback((week: number, value: number) => {
+        props.handleChangeComodin(week, value);
     }, []);
     
     useEffect(() => {
@@ -66,13 +73,21 @@ function Calendar(props: IProps) {
                                 {
                                     MONTHS[month].range.map((week: number[], index: number) => {
                                         return(
-                                            <Row week={index + 1} key={index} handleSelectDay = {handleSelectDay} day={day} range={week}></Row>
+                                            <Row 
+                                                week={index + 1} 
+                                                key={index} 
+                                                handleSelectDay = {handleSelectDay} 
+                                                day={day} 
+                                                range={week} 
+                                                comodin={props.monthlyData[index].comodin}
+                                                handleChangeComodin={(week: number, value: number) => handleChangeComodin(week, value)}
+                                            ></Row>
                                         );
                                     })
                                 }
                                 <tr>
                                     <td colSpan={8}><div className="alert alert-info" role="alert">UTILICE ESTE BOTON PARA GUARDAR LOS REGISTROS SEMANALES</div></td>
-                                    <td><button className="btn btn-primary">Guardar</button></td>
+                                    <td><button className="btn btn-primary" onClick={() => props.handleSave()}>Guardar</button></td>
 
                                 </tr>                                
                         </tbody>
