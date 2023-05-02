@@ -87,7 +87,7 @@ function Calendar(props: IProps) {
                                 }
                                 <tr>
                                     <td colSpan={8}><div className="alert alert-info" role="alert">UTILICE ESTE BOTON PARA GUARDAR LOS REGISTROS SEMANALES</div></td>
-                                    <td><button className="btn btn-primary" onClick={() => props.handleSave()}>Guardar</button></td>
+                                    <td><button className="btn btn-primary" onClick={() => props.handleSave(month)}>Guardar</button></td>
 
                                 </tr>                                
                         </tbody>

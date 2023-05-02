@@ -41,6 +41,34 @@ export const save = async (payload: ISaveRegisterRequest): Promise<ISaveRegister
         comodin: payload.data.comodin,
         day: payload.data.day,
         month: payload.data.month,
+        image1: '',
+        image2: '',
+        image3: '',
+        image4: '',
+        image5: '',
+    }
+    if (payload.images) {
+        payload.images.forEach((img: {id: string, b64: string}, index: number) => {
+            switch(index) {
+                case 0:
+                    data.image1 = img.b64;
+                    break;
+                case 1:
+                    data.image2 = img.b64;
+                    break;
+                case 2:
+                    data.image3 = img.b64;
+                    break;
+                case 3:
+                    data.image4 = img.b64;
+                    break;
+                case 4:
+                    data.image5 = img.b64;
+                    break;
+                default:
+                    break;
+            }
+        });
     }
     return await callApi(`${BASE_URL}/api/v1/registers/saveRegister`, data, 'POST', 'saveRegister');
 }
@@ -58,7 +86,13 @@ export const saveMonthly = async (payload: ISaveMonthlyRequest): Promise<ISaveMo
     const data = {
         userId: payload.userId,
         room: payload.room,
-        data: payload.data
+        month: payload.month,
+        week1: payload.data[0].comodin,
+        week2: payload.data[1].comodin,
+        week3: payload.data[2].comodin,
+        week4: payload.data[3].comodin,
+        week5: payload.data[4] ? payload.data[4].comodin : 0,
+        week6: payload.data[5] ? payload.data[5].comodin : 0
     }
     return await callApi(`${BASE_URL}/api/v1/registers/saveMonthly`, data, 'POST', 'saveMonthly');
 }

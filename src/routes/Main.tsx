@@ -18,6 +18,7 @@ function MainRouter() {
             <Route path="/registerGGPoker" element={<RegisterGGPoker />}></Route>
             <Route path="/player" element={<Player></Player>}></Route>
             <Route path="/player/add" element={<Add></Add>}></Route>
+            <Route path="/player/edit/:id" element={<Add></Add>}></Route>
             <Route path="/recharges" element={<Recharges></Recharges>}></Route>
             <Route path="/closeMonth" element={<CloseMonth></CloseMonth>}></Route>
             <Route path="/configuration" element={<Configuration></Configuration>}></Route>

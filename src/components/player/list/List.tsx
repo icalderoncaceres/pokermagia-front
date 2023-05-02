@@ -1,8 +1,37 @@
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { NavLink } from "react-router-dom";
+import { index } from '../../../services/players/PlayerService';
 
 function List() {
+
+    interface IPlayer {
+        id?: number | string
+        name: string
+        last_name: string
+        email: string
+        room: string
+        level: string
+        phone: string
+        country: string
+        notes: string
+    }
+
+    const [list,setList] = useState<IPlayer[]>([]);
+
+    useEffect(() => {
+        (async() => {
+            try {                
+                const response = await index({});
+                if (response.status === 200 && response.players) {
+                    setList(response.players);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+
+        })();
+    }, []);
     return (
         <React.Fragment>
             <h1 className="h3 mb-2 text-gray-800">JUGADORES</h1>
@@ -23,76 +52,43 @@ function List() {
                         <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
                             <thead>
                                 <tr>
+                                    <th>#</th>
                                     <th>Nombre</th>
-                                    <th>ROLL START</th>
-                                    <th>BALANCE</th>
-                                    <th>CASHBACK</th>
-                                    <th>PROFIT NETO</th>
-                                    <th>BANK FINAL</th>
-                                    <th>RAKE</th>
-                                    <th>COMPENSA MES<br />ANTERIOR</th>
-                                    <th>ROLL NEXT MONTH</th>
+                                    <th>Apellido</th>
+                                    <th>Email</th>
+                                    <th>Sala</th>
+                                    <th>Nivel</th>
+                                    <th>Telefono</th>
+                                    <th>País</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                <tr>
-                                    <td>Herrera Vargas Jorge Alberto</td>
-                                    <td>100,87</td>
-                                    <td>314,88</td>
-                                    <td>208,76</td>
-                                    <td>14,21</td>
-                                    <td>657,54</td>
-                                    <td>0,00</td>
-                                    <td>239,87</td>
-                                    <td>276,87</td>
-                                    <td>
-                                        <a href="#" className="btn btn-success btn-circle">
-                                            <i className="fas fa-check"></i>
-                                        </a>
-                                        <a href="#" className="btn btn-danger btn-circle">
-                                            <i className="fas fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Herrera Vargas Jorge Alberto</td>
-                                    <td>100,87</td>
-                                    <td>314,88</td>
-                                    <td>208,76</td>
-                                    <td>14,21</td>
-                                    <td>657,54</td>
-                                    <td>0,00</td>
-                                    <td>239,87</td>
-                                    <td>276,87</td>
-                                    <td>
-                                        <a href="#" className="btn btn-success btn-circle">
-                                            <i className="fas fa-check"></i>
-                                        </a>
-                                        <a href="#" className="btn btn-danger btn-circle">
-                                            <i className="fas fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Herrera Vargas Jorge Alberto</td>
-                                    <td>100,87</td>
-                                    <td>314,88</td>
-                                    <td>208,76</td>
-                                    <td>14,21</td>
-                                    <td>657,54</td>
-                                    <td>0,00</td>
-                                    <td>239,87</td>
-                                    <td>276,87</td>
-                                    <td>
-                                        <a href="#" className="btn btn-success btn-circle">
-                                            <i className="fas fa-check"></i>
-                                        </a>
-                                        <a href="#" className="btn btn-danger btn-circle">
-                                            <i className="fas fa-trash"></i>
-                                        </a>
-                                    </td>                                        </tr>
+                                {
+                                    list.map((player: IPlayer, index: number) => {
+                                        return (
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td>{player.name}</td>
+                                            <td>{player.last_name}</td>
+                                            <td>{player.email}</td>
+                                            <td>{player.room}</td>
+                                            <td>{player.level}</td>
+                                            <td>{player.phone}</td>
+                                            <td>{player.country}</td>
+                                            <td>
+                                                <NavLink to={`/player/edit/${player.id}`} className="btn btn-success btn-circle">
+                                                    <i className="fas fa-check"></i>
+                                                </NavLink>
+                                                <a href="#" className="btn btn-danger btn-circle">
+                                                    <i className="fas fa-trash"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        );
+                                    })
+                                }
                             </tbody>
                         </table>
                     </div>

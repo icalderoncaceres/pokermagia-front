@@ -44,7 +44,29 @@ function RegisterPartyPoker() {
     const loadDataFromServer = async (day: number, month: number) => {
         let response = await get({userId: user.id, room: 'partypoker', day, month});
         if (response.data) {
-            setData({ bank: response.data.bank, hands: response.data.hands, comodin: response.data.comodin, day, month});
+            setData({ 
+                bank: response.data.bank, 
+                hands: response.data.hands, 
+                comodin: response.data.comodin, 
+                day, 
+                month,
+            });
+            const newImagesList: {id: string, b64: string}[] = [];
+            if (response.data.image1) {
+                newImagesList.push({id: 'nid-' + Math.floor(Math.random() * 1000000), b64: response.data.image1});
+            }
+            if (response.data.image2) {
+                newImagesList.push({id: 'nid-' + Math.floor(Math.random() * 1000000), b64: response.data.image2});
+            }
+            if (response.data.image3) {
+                newImagesList.push({id: 'nid-' + Math.floor(Math.random() * 1000000), b64: response.data.image3});
+            }
+            if (response.data.image4) {
+                newImagesList.push({id: 'nid-' + Math.floor(Math.random() * 1000000), b64: response.data.image4});
+            }
+            if (response.data.image5) {
+                newImagesList.push({id: 'nid-' + Math.floor(Math.random() * 1000000), b64: response.data.image5});
+            }
             const newListElement = {
                 day,
                 month,
@@ -53,6 +75,7 @@ function RegisterPartyPoker() {
                 comodin: response.data.comodin
             }
             list = [...list, newListElement];
+            setImages(newImagesList);
         }
     }
 
@@ -60,8 +83,16 @@ function RegisterPartyPoker() {
         let response = await getMonthly({userId: user.id, month, room: 'partypoker'});
         if (response.status === 201) {
             setMonthlyData(initialMonthlyData);
-        } else if (response.list) {
-            setMonthlyData(response.list);
+        } else if (response.data) {
+            const newMonthlyData: {week: number, comodin: number}[] = [
+                {week: 1, comodin: response.data.week1},
+                {week: 2, comodin: response.data.week2},
+                {week: 3, comodin: response.data.week3},
+                {week: 4, comodin: response.data.week4},
+                {week: 5, comodin: response.data.week5},
+                {week: 6, comodin: response.data.week6}
+            ];
+            setMonthlyData(newMonthlyData);
         }
     }
     
@@ -100,10 +131,10 @@ function RegisterPartyPoker() {
         });
     }
 
-    const handleSave = useCallback(() => {
+    const handleSave = useCallback((month: number) => {
         (async() => {
             try {
-                const response = await saveMonthly({userId: user.id, room: 'partypoker', data: monthlyData});
+                const response = await saveMonthly({userId: user.id, room: 'partypoker', month, data: monthlyData});
                 if (response.status === 200) {
                     setSuccess(true);
                     setFailed(false);
@@ -139,7 +170,6 @@ function RegisterPartyPoker() {
                     setFailed(false);
                 }
             } catch (error) {
-                console.log('Cae en el error::', error);
                 setFailed(true);
                 setSuccess(false);
             }

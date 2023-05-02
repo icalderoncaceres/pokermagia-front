@@ -2,7 +2,14 @@
 import { IUser } from '../users/UserService.model';
 /****************** ENTITIES INTERFACES *******/
 interface IPlayer extends IUser {
+    name: string
+    last_name: string
+    room: string
+    email: string
     level: string
+    phone: string
+    country: string
+    notes: string
 }
 
 export interface ICreatePlayerRequest {
@@ -38,7 +45,8 @@ export interface IIndexPlayerResponse {
 }
 
 export interface IUpdatePlayerRequest {
-    player: IPlayer
+    id: number
+    player: Partial<IPlayer>
 }
 
 export interface IUpdatePlayerResponse {

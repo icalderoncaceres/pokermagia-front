@@ -6,6 +6,11 @@ interface IRegisterData {
     bank: number
     hands: number
     comodin: number
+    image1: string
+    image2: string
+    image3: string
+    image4: string
+    image5: string
 }
 
 export interface IGetRegisterRequest {
@@ -55,12 +60,13 @@ export interface IGetMonthlyRequest {
 
 export interface IGetMonthlyResponse {
     status: number
-    list?: any[]
+    data?: {month: number, week1: number, week2: number, week3: number, week4: number, week5: number, week6: number}
     errors?: string[]
 }
 
 export interface ISaveMonthlyRequest {
     userId: number
+    month: number
     data: {
         week: number,
         comodin: number
