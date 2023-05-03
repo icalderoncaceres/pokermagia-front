@@ -54,9 +54,7 @@ function Add() {
             if (!id) {
                 response = await create({player: data});
             } else {
-                if (data.id) {
-                    response = await update({id: +id, player: data});
-                }
+                response = await update({id: +id, player: data});
             }
             if (response && response.status === 200) {
                 if (id) {
